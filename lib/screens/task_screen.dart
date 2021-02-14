@@ -1,7 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:todoey_flutter/models/task.dart';
 import 'package:todoey_flutter/screens/add_task_screen.dart';
+import 'package:todoey_flutter/widgets/tasks_list.dart';
 
-class TasksScreen extends StatelessWidget {
+class TasksScreen extends StatefulWidget {
+
+  @override
+  _TasksScreenState createState() => _TasksScreenState();
+}
+
+class _TasksScreenState extends State<TasksScreen> {
+  List<Task> tasks = [
+    Task(name: 'Buy Milk')
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +27,12 @@ class TasksScreen extends StatelessWidget {
           showModalBottomSheet(context: context, builder: (BuildContext context) => SingleChildScrollView(
               child: Container(
                   padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-                  child: AddTaskScreen()
+                  child: AddTaskScreen(addTaskCallback: (taskText) {
+                    setState(() {
+                      tasks.add(Task(name: taskText));
+                      Navigator.pop(context);
+                    });
+                  },)
               ),
           ),
           );
@@ -52,7 +68,7 @@ class TasksScreen extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  '12 Tasks',
+                  '${tasks.length} Tasks',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 18,
@@ -71,57 +87,11 @@ class TasksScreen extends StatelessWidget {
                   topRight: Radius.circular(20),
                 ),
               ),
-              child: TasksList(),
+              child: TasksList(tasks: tasks,)
             ),
           ),
         ],
       ),
-    );
-  }
-}
-
-class TasksList extends StatelessWidget {
-  const TasksList({
-    Key key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return ListView(
-      children: <Widget>[
-        TaskTile()
-      ],
-    );
-  }
-}
-
-class TaskTile extends StatefulWidget {
-
-  @override
-  _TaskTileState createState() => _TaskTileState();
-}
-
-class _TaskTileState extends State<TaskTile> {
-  bool isChecked = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return CheckboxListTile(
-        title: Text(
-          'Do the list',
-          style: TextStyle(
-            fontSize: 22,
-            decoration: isChecked ? TextDecoration.lineThrough : TextDecoration.none,
-          ),
-        ),
-        activeColor: Colors.lightBlueAccent,
-        controlAffinity: ListTileControlAffinity.trailing,
-        value: isChecked,
-        onChanged: (newValue) {
-          setState(() {
-            isChecked = newValue;
-          });
-        }
     );
   }
 }
