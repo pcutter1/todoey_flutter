@@ -22,6 +22,7 @@ class TaskTile extends StatelessWidget {
         activeColor: Colors.lightBlueAccent,
         value: isChecked,
         onChanged: checkboxCallback,
+        secondary: Dismissible(key: Key(taskTitle), child: null),
     );
   }
 }
